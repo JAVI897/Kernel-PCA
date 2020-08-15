@@ -9,14 +9,28 @@ import warnings
 
 class KPCA:
     def __init__(self, X, kernel, d):
+        """
+        KPCA object
+        Inputs:
+        
+        X: dxn matrix
+        kernel: kernel function from kernel class
+        d: number of principal components to be chosen
+        """
         self.X = X
-        self.kernel = kernel #Función de la clase kernel
-        self.d = d # Dimensiones sobre las que proyectar
+        self.kernel = kernel 
+        self.d = d
     
     def _is_pos_semidef(self, x):
         return np.all(x >= 0)
 
     def __kernel_matrix(self):
+        """
+        Compute kernel matrix
+        Output:
+        
+        K: nxn matrix
+        """
         K = []
         r, c = self.X.shape
         for fil in range(c):
@@ -31,15 +45,29 @@ class KPCA:
         return K
     
     def __descomp(self):
+        """
+        Decomposition of K
+        Output:
+        
+        tuplas_eig: List of ordered tuples by singular 
+                    values; (singular_value, eigenvector)
+        """
         self.K = self.__kernel_matrix()
         eigval, eigvec = np.linalg.eig(self.K)
         if not self._is_pos_semidef(eigval):
             warnings.warn("La matriz K no es semidefinida positiva")
+        # Normalize eigenvectors and compute singular values of K
         tuplas_eig = [(np.sqrt(eigval[i]), eigvec[:,i]/np.sqrt(eigval[i]) ) for i in range(len(eigval))]
         tuplas_eig.sort(key=lambda x: x[0], reverse=True)
         return tuplas_eig
     
     def project(self):
+        """
+        Compute scores
+        Output:
+        
+        scores: T = sigma * V_d^t
+        """
         self.tuplas_eig = self.__descomp()
         tuplas_eig_dim = self.tuplas_eig[:self.d]
         self.sigma = np.diag([i[0] for i in tuplas_eig_dim])
