@@ -19,11 +19,11 @@ A Python implementation of Kernel Principal Component Analysis (KPCA). Kernels i
 
 ## Requirements
 
-- python 3.7 version
+* numpy
 
-- numpy
-- matplotlib
-- seaborn
+* matplotlib
+
+* seaborn
 
 ## Run
 
