@@ -11,7 +11,8 @@ class KPCA:
     def __init__(self, X, kernel, d):
         """
         KPCA object
-        Inputs:
+        Parameters
+        ----------
         
         X: dxn matrix
         kernel: kernel function from kernel class
@@ -77,12 +78,12 @@ class KPCA:
         self.scores = self.sigma @ self.v.T
         return self.scores
     
-    def plot_singular_values(self):
+    def plot_singular_values(self, grid = True):
         eig_plot = [np.real_if_close(e, tol=1) for (e, _) in self.tuplas_eig if e > 0.01]
         plt.style.use('seaborn-whitegrid')
         fig = plt.figure(figsize=(15,7.5))
         plt.plot(list(range(1, len(eig_plot) + 1)), eig_plot)
-        plt.grid(True)
+        plt.grid(grid)
         plt.title('Valores singulares de la matriz $K$ distintos de 0')
         plt.ylabel('$\sigma^2$')
         plt.show()
@@ -123,7 +124,7 @@ class KPCA:
     def plot_density(self, labels, dim=1, grid = False):
         plt.style.use('seaborn-whitegrid')
         fig = plt.figure(figsize=(15,5))
-        for ele in labels.unique():
+        for ele in np.unique(labels):
             sns.distplot(self.scores[dim - 1,:][np.where(labels == ele)], hist = False, 
                          kde = True, kde_kws = {'linewidth': 3}, label = ele)
         plt.grid(grid)
